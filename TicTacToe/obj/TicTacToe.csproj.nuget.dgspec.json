@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {}
+    "C:\\Users\\alu201620608\\source\\repos\\angelodc\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {
+    "C:\\Users\\alu201620608\\source\\repos\\angelodc\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
+        "projectUniqueName": "C:\\Users\\alu201620608\\source\\repos\\angelodc\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
         "projectName": "TicTacToe",
-        "projectPath": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
+        "projectPath": "C:\\Users\\alu201620608\\source\\repos\\angelodc\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
         "packagesPath": "C:\\Users\\alu201620608\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\obj\\",
+        "outputPath": "C:\\Users\\alu201620608\\source\\repos\\angelodc\\TicTacToeAI\\TicTacToe\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
           "C:\\Users\\alu201620608\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -47,12 +51,22 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.0.1, 3.0.1]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.0.2, 3.0.2]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

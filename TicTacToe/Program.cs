@@ -8,7 +8,7 @@ namespace TicTacToe
 {
     class Program
     {
-        static string filePath = @"C:\Users\alu201620608\Downloads\GitFolder\TicTacToeAI\TicTacToe\Txt\IaBrain.txt";
+        static string filePath;
         static public bool gameWon = false;
         static public char[,] board;
         static public bool playerTurn = true;
@@ -24,6 +24,9 @@ namespace TicTacToe
 
         static void Main(string[] args)
         {
+            filePath = System.IO.Directory.GetCurrentDirectory();
+            filePath = filePath.Split("bin\\Debug\\netcoreapp3.0")[0];
+            filePath += @"Txt\IaBrain.txt";
             while (gamesPlayed < 80000)
             {
                 InitializeBoard();
@@ -45,12 +48,6 @@ namespace TicTacToe
                 }
                 IAFinalGame();
                 gamesPlayed++;
-                //limpar memoria?
-                //Force garbage collection.
-                GC.Collect();
-
-                // Wait for all finalizers to complete before continuing.
-                GC.WaitForPendingFinalizers();
             }
             Console.WriteLine("Games Ia Lost:" + iaLosses);
             Console.WriteLine("Total Games:" + gamesPlayed);
