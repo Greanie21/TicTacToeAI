@@ -8,11 +8,13 @@ namespace TicTacToe
 {
     class Program
     {
+        static string filePath = @"C:\Users\alu201620608\Downloads\GitFolder\TicTacToeAI\TicTacToe\Txt\IaBrain.txt";
         static public bool gameWon = false;
         static public char[,] board;
         static public bool playerTurn = true;
         static bool errorPlayer = false;
-        static Dictionary<string, float[]> dic;
+        static Dictionary<string, float[]> iaBrainDic;
+        static Dictionary<string, int> numberOfSameMoves;
         static List<Plays> plays;
         static char winnerPlayer;
         static int iaLosses = 0;
@@ -22,7 +24,7 @@ namespace TicTacToe
 
         static void Main(string[] args)
         {
-            while (gamesPlayed < 1000)
+            while (gamesPlayed < 80000)
             {
                 InitializeBoard();
                 InitializaVariables();
@@ -44,6 +46,11 @@ namespace TicTacToe
                 IAFinalGame();
                 gamesPlayed++;
                 //limpar memoria?
+                //Force garbage collection.
+                GC.Collect();
+
+                // Wait for all finalizers to complete before continuing.
+                GC.WaitForPendingFinalizers();
             }
             Console.WriteLine("Games Ia Lost:" + iaLosses);
             Console.WriteLine("Total Games:" + gamesPlayed);
@@ -67,7 +74,8 @@ namespace TicTacToe
         {
             gameWon = false;
             plays = new List<Plays>();
-            dic = new Dictionary<string, float[]>();
+            iaBrainDic = new Dictionary<string, float[]>();
+            numberOfSameMoves = new Dictionary<string, int>();
 
             ReadTxt();
         }
@@ -310,16 +318,26 @@ namespace TicTacToe
 
         static void IAMove(char c)
         {
+            string boardLocal = TransformBoardToString();
             string move = "5";
-            if (dic.ContainsKey(TransformBoardToString()))
+            List<float> possibleMoves = new List<float>();
+            if (iaBrainDic.ContainsKey(boardLocal))
             {
-                for (int i = 0; i <= 8; i++)
+                for (int i = 0; i < iaBrainDic[boardLocal].Length; i++)
                 {
-                    if (dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][1] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][2] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][3] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][4] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][5] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][6] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][7] && dic[TransformBoardToString()][i] >= dic[TransformBoardToString()][8])
+                    char[] boardChar = boardLocal.ToCharArray();
+                    //the +48 is to converto to asc table
+                    if (boardChar[i] == Convert.ToChar((i+1)+48))
                     {
-                        move = i.ToString();
+                        possibleMoves.Add(iaBrainDic[boardLocal][i]);
+                    }
+                    else
+                    {
+                        possibleMoves.Add(float.MinValue);
                     }
                 }
+
+                move = returnBiggest(possibleMoves).ToString();
             }
             else
             {
@@ -334,15 +352,17 @@ namespace TicTacToe
                 //Array.Copy(board, 0, boardTemp, 0, board.Length);
                 //dic.Add(boardTemp, f);
 
-                dic.Add(TransformBoardToString(), f);
+                iaBrainDic.Add(boardLocal, f);
             }
             switch (move)
             {
                 case "1":
                     if (board[0, 0] == '1')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[0, 0] = c;
                         playerTurn = !playerTurn;
@@ -356,8 +376,10 @@ namespace TicTacToe
                 case "2":
                     if (board[0, 1] == '2')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[0, 1] = c;
                         playerTurn = !playerTurn;
@@ -371,8 +393,10 @@ namespace TicTacToe
                 case "3":
                     if (board[0, 2] == '3')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[0, 2] = c;
                         playerTurn = !playerTurn;
@@ -386,8 +410,10 @@ namespace TicTacToe
                 case "4":
                     if (board[1, 0] == '4')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[1, 0] = c;
                         playerTurn = !playerTurn;
@@ -401,8 +427,10 @@ namespace TicTacToe
                 case "5":
                     if (board[1, 1] == '5')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[1, 1] = c;
                         playerTurn = !playerTurn;
@@ -416,8 +444,10 @@ namespace TicTacToe
                 case "6":
                     if (board[1, 2] == '6')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[1, 2] = c;
                         playerTurn = !playerTurn;
@@ -431,8 +461,10 @@ namespace TicTacToe
                 case "7":
                     if (board[2, 0] == '7')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[2, 0] = c;
                         playerTurn = !playerTurn;
@@ -446,8 +478,10 @@ namespace TicTacToe
                 case "8":
                     if (board[2, 1] == '8')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[2, 1] = c;
                         playerTurn = !playerTurn;
@@ -461,8 +495,10 @@ namespace TicTacToe
                 case "9":
                     if (board[2, 2] == '9')
                     {
-                        Plays p = new Plays(TransformBoardToString(), move);
+                        Plays p = new Plays(boardLocal, move);
                         plays.Add(p);
+
+                        addCountSameMoves(boardLocal);
 
                         board[2, 2] = c;
                         playerTurn = !playerTurn;
@@ -478,6 +514,27 @@ namespace TicTacToe
                     IAMove(c);
                     break;
             }
+        }
+
+        static int returnBiggest(List<float> values)
+        {
+            if (values.Count == 1)
+            {
+                return 0;
+            }
+            int smallest = 0;
+
+
+            for (int i = 1; i < values.Count; i++)
+            {
+                if (values[i] > values[i - 1])
+                {
+                    smallest = i;
+                }
+            }
+
+            //convert 1...9 (board) to 0...8(array)
+            return smallest+1;
         }
 
         static bool WinCondition()
@@ -559,13 +616,13 @@ namespace TicTacToe
 
             if (rewarding)
             {
-                float reward = dic[boardStatus][Int32.Parse(s)] / 100 * punishment;
-                dic[boardStatus][Int32.Parse(s)] += reward;
+                float reward = 0.1f / 100 * punishment;
+                iaBrainDic[boardStatus][Int32.Parse(s)-1] += reward;
             }
             else
             {
-                float subtract = dic[boardStatus][Int32.Parse(s)] / 100.0f * punishment;
-                dic[boardStatus][Int32.Parse(s)] -= subtract;
+                float subtract = 0.1f / 100.0f * punishment;
+                iaBrainDic[boardStatus][Int32.Parse(s)-1] -= subtract;
             }
         }
 
@@ -602,47 +659,87 @@ namespace TicTacToe
 
             string newBoard = string.Empty;
 
-            for (int i = 0; i <= 2; i++)
-            {
-                for (int j = 0; j <= 2; j++)
-                {
-                    newBoard += boardStatus[i, j];
-                }
-            }
+            //this causes stackoverflow
+            //for (int i = 0; i <= 2; i++)
+            //{
+            //    for (int j = 0; j <= 2; j++)
+            //    {
+            //        newBoard += boardStatus[i, j];
+            //    }
+            //}
+
+            //this dont
+            newBoard += boardStatus[0, 0];
+            newBoard += boardStatus[0, 1];
+            newBoard += boardStatus[0, 2];
+            newBoard += boardStatus[1, 0];
+            newBoard += boardStatus[1, 1];
+            newBoard += boardStatus[1, 2];
+            newBoard += boardStatus[2, 0];
+            newBoard += boardStatus[2, 1];
+            newBoard += boardStatus[2, 2];
+
             return newBoard;
+        }
+
+        static void addCountSameMoves(string boardLocal)
+        {
+            if(numberOfSameMoves.ContainsKey(boardLocal))
+            {
+                numberOfSameMoves[boardLocal]++;
+            }
+            else
+            {
+                numberOfSameMoves.Add(boardLocal, 1);
+            }
         }
 
         static void ReadTxt()
         {
-            string path = @"C:\Users\alu201620608\Downloads\TicTacToe\TicTacToe\Txt\IaBrain.txt";
-
-            using (StreamReader sr = new StreamReader(path))
+            using (StreamReader sr = new StreamReader(filePath))
             {
                 while (sr.Peek() >= 0)
                 {
                     string[] strSplit = sr.ReadLine().Split('/');
                     float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
-                    dic.Add(strSplit[0], f);
+                    iaBrainDic.Add(strSplit[0], f);
+                    if(strSplit.Length==11)
+                    {
+                        numberOfSameMoves.Add(strSplit[0], Int32.Parse(strSplit[10]));
+                    }
+                    else
+                    {
+                        numberOfSameMoves.Add(strSplit[0], 0);
+                    }
                 }
             }
         }
 
         static void WriteTxt()
         {
-            string path = @"C:\Users\alu201620608\Downloads\TicTacToe\TicTacToe\Txt\IaBrain.txt";
-
-            using (StreamWriter sw = new StreamWriter(path))
+            using (StreamWriter sw = new StreamWriter(filePath))
             {
-                foreach (KeyValuePair<string, float[]> k in dic)
+                foreach (KeyValuePair<string, float[]> kvp in iaBrainDic)
                 {
-                    string s = k.Key + "/";
+                    string line = kvp.Key + "/";
 
-                    foreach (float f in k.Value)
+                    foreach (float chanceToMakeThisMove in kvp.Value)
                     {
-                        s += f + "/";
+                        line += chanceToMakeThisMove + "/";
                     }
-                    s = s.Remove(s.Length - 1);
-                    sw.WriteLine(s);
+                    //line = line.Remove(line.Length - 1);
+
+                    int sameMovesCount;
+                    if (numberOfSameMoves.TryGetValue(kvp.Key, out sameMovesCount))
+                    {
+                        line += sameMovesCount.ToString();
+                    }
+                    else
+                    {
+                        line += "0";
+                    }
+
+                    sw.WriteLine(line);
                 }
             }
         }

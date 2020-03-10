@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alu201620608\\Downloads\\TicTacToe\\TicTacToe\\TicTacToe.csproj": {}
+    "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alu201620608\\Downloads\\TicTacToe\\TicTacToe\\TicTacToe.csproj": {
+    "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alu201620608\\Downloads\\TicTacToe\\TicTacToe\\TicTacToe.csproj",
+        "projectUniqueName": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
         "projectName": "TicTacToe",
-        "projectPath": "C:\\Users\\alu201620608\\Downloads\\TicTacToe\\TicTacToe\\TicTacToe.csproj",
+        "projectPath": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\TicTacToe.csproj",
         "packagesPath": "C:\\Users\\alu201620608\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alu201620608\\Downloads\\TicTacToe\\TicTacToe\\obj\\",
+        "outputPath": "C:\\Users\\alu201620608\\Downloads\\GitFolder\\TicTacToeAI\\TicTacToe\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\alu201620608\\AppData\\Roaming\\NuGet\\NuGet.Config",
