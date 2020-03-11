@@ -19,6 +19,7 @@ namespace TicTacToe
         static char winnerPlayer;
         static int iaLosses = 0;
         static int gamesPlayed = 0;
+        static int TotalgamesPlayed;
 
         static int punishment = 5;
 
@@ -695,9 +696,11 @@ namespace TicTacToe
         {
             using (StreamReader sr = new StreamReader(filePath))
             {
+                TotalgamesPlayed=int.Parse(sr.ReadLine());
                 while (sr.Peek() >= 0)
                 {
-                    string[] strSplit = sr.ReadLine().Split('/');
+                    string preSplit = sr.ReadLine();
+                    string[] strSplit = preSplit.Split('/');
                     float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
                     iaBrainDic.Add(strSplit[0], f);
                     if(strSplit.Length==11)
@@ -716,6 +719,7 @@ namespace TicTacToe
         {
             using (StreamWriter sw = new StreamWriter(filePath))
             {
+                sw.WriteLine(TotalgamesPlayed+1);
                 foreach (KeyValuePair<string, float[]> kvp in iaBrainDic)
                 {
                     string line = kvp.Key + "/";
