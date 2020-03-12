@@ -8,27 +8,34 @@ namespace TicTacToe
 {
     class Program
     {
-        static string filePath;
+        static string filePathX;
+        static string filePathO;
         static public bool gameWon = false;
         static public char[,] board;
         static public bool playerTurn = true;
         static bool errorPlayer = false;
-        static Dictionary<string, float[]> iaBrainDic;
-        static Dictionary<string, int> numberOfSameMoves;
-        static List<Plays> plays;
+        static Dictionary<string, float[]> iaBrainDicX;
+        static Dictionary<string, float[]> iaBrainDicO;
+        static Dictionary<string, int> numberOfSameMovesX;
+        static Dictionary<string, int> numberOfSameMovesO;
+        static List<Plays> playsX;
+        static List<Plays> playsO;
         static char winnerPlayer;
-        static int iaLosses = 0;
+        static int iaXLosses = 0;
+        static int iaOLosses = 0;
+
         static int gamesPlayed = 0;
-        static int TotalgamesPlayed;
+        static int TotalgamesPlayedX;
+        static int TotalgamesPlayedO;
 
         static int punishment = 5;
 
         static void Main(string[] args)
         {
-            filePath = System.IO.Directory.GetCurrentDirectory();
-            filePath = filePath.Split("bin\\Debug\\netcoreapp3.0")[0];
-            filePath += @"Txt\IaBrain.txt";
-            while (gamesPlayed < 80000)
+            filePathX = filePathO = System.IO.Directory.GetCurrentDirectory().Split("bin\\Debug\\netcoreapp3.0")[0];
+            filePathX += @"Txt\IaBrainX.txt";
+            filePathO += @"Txt\IaBrainO.txt";
+            while (gamesPlayed < 10000)
             {
                 InitializeBoard();
                 InitializaVariables();
@@ -39,7 +46,8 @@ namespace TicTacToe
                     if (playerTurn)
                     {
                         //PlayerMove();
-                        RandMove('X');
+                        //RandMove('X');
+                        IAMove('X');
                     }
                     else
                     {
@@ -50,7 +58,10 @@ namespace TicTacToe
                 IAFinalGame();
                 gamesPlayed++;
             }
-            Console.WriteLine("Games Ia Lost:" + iaLosses);
+            Console.Beep();
+            Console.WriteLine("Games Ia 'X' Lost:" + iaXLosses);
+            Console.WriteLine("Games Ia 'O' Lost:" + iaOLosses);
+            
             Console.WriteLine("Total Games:" + gamesPlayed);
         }
 
@@ -71,26 +82,34 @@ namespace TicTacToe
         static void InitializaVariables()
         {
             gameWon = false;
-            plays = new List<Plays>();
-            iaBrainDic = new Dictionary<string, float[]>();
-            numberOfSameMoves = new Dictionary<string, int>();
+            playsO = new List<Plays>();
+            playsX = new List<Plays>();
+            iaBrainDicX = new Dictionary<string, float[]>();
+            iaBrainDicO = new Dictionary<string, float[]>();
+            numberOfSameMovesX = new Dictionary<string, int>();
+            numberOfSameMovesO = new Dictionary<string, int>();
 
-            ReadTxt();
+            ReadTxtX();
+            ReadTxtO();
         }
 
         static void Draw()
         {
-            //Console.Clear();
-            //if (errorPlayer)
-            //{
-            //    Console.WriteLine("Joga Direito");
-            //}
-            //errorPlayer = false;
-            //Console.WriteLine(board[0, 0] + "|" + board[0, 1] + "|" + board[0, 2]);
-            //Console.WriteLine("-----");
-            //Console.WriteLine(board[1, 0] + "|" + board[1, 1] + "|" + board[1, 2]);
-            //Console.WriteLine("-----");
-            //Console.WriteLine(board[2, 0] + "|" + board[2, 1] + "|" + board[2, 2]);
+            bool showBoard = false;
+            if (showBoard)
+            {
+                Console.Clear();
+                if (errorPlayer)
+                {
+                    Console.WriteLine("Joga Direito");
+                }
+                errorPlayer = false;
+                Console.WriteLine(board[0, 0] + "|" + board[0, 1] + "|" + board[0, 2]);
+                Console.WriteLine("-----");
+                Console.WriteLine(board[1, 0] + "|" + board[1, 1] + "|" + board[1, 2]);
+                Console.WriteLine("-----");
+                Console.WriteLine(board[2, 0] + "|" + board[2, 1] + "|" + board[2, 2]);
+            }
         }
 
         static void PlayerMove()
@@ -317,200 +336,206 @@ namespace TicTacToe
         static void IAMove(char c)
         {
             string boardLocal = TransformBoardToString();
-            string move = "5";
-            List<float> possibleMoves = new List<float>();
-            if (iaBrainDic.ContainsKey(boardLocal))
-            {
-                for (int i = 0; i < iaBrainDic[boardLocal].Length; i++)
-                {
-                    char[] boardChar = boardLocal.ToCharArray();
-                    //the +48 is to converto to asc table
-                    if (boardChar[i] == Convert.ToChar((i+1)+48))
-                    {
-                        possibleMoves.Add(iaBrainDic[boardLocal][i]);
-                    }
-                    else
-                    {
-                        possibleMoves.Add(float.MinValue);
-                    }
-                }
+            string move = DetermineMove(boardLocal, c);
 
-                move = returnBiggest(possibleMoves).ToString();
-            }
-            else
-            {
-                float[] f = new float[9] { 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f };
-
-                char[,] boardTemp = new char[3, 3];
-                //boardTemp = (char[,])board.Clone();
-                //for (int i = 0; i < 3; i++)
-                //{
-                //    boardTemp[0,i] = board.CopyTo(boardTemp[0], 0);
-                //}
-                //Array.Copy(board, 0, boardTemp, 0, board.Length);
-                //dic.Add(boardTemp, f);
-
-                iaBrainDic.Add(boardLocal, f);
-            }
             switch (move)
             {
                 case "1":
                     if (board[0, 0] == '1')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[0, 0] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "2":
                     if (board[0, 1] == '2')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[0, 1] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "3":
                     if (board[0, 2] == '3')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[0, 2] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "4":
                     if (board[1, 0] == '4')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[1, 0] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "5":
                     if (board[1, 1] == '5')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[1, 1] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "6":
                     if (board[1, 2] == '6')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[1, 2] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "7":
                     if (board[2, 0] == '7')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[2, 0] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "8":
                     if (board[2, 1] == '8')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[2, 1] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 case "9":
                     if (board[2, 2] == '9')
                     {
-                        Plays p = new Plays(boardLocal, move);
-                        plays.Add(p);
-
-                        addCountSameMoves(boardLocal);
+                        addPlay(boardLocal, move, c);
 
                         board[2, 2] = c;
                         playerTurn = !playerTurn;
                     }
                     else
                     {
-                        IAChange(move, false);
+                        IAChange(move, false, c);
                         IAMove(c);
                     }
                     break;
                 default:
-                    IAChange(move, false);
-                    IAMove(c);
+                    Console.WriteLine("Logical error!");
                     break;
+            }
+        }
+
+        static string DetermineMove(string boardLocal, char turn)
+        {
+            List<float> possibleMoves = new List<float>();
+            if (turn == 'X')
+            {
+                if (iaBrainDicX.ContainsKey(boardLocal))
+                {
+                    for (int i = 0; i < iaBrainDicX[boardLocal].Length; i++)
+                    {
+                        char[] boardChar = boardLocal.ToCharArray();
+                        //the +48 is to converto to asc table
+                        if (boardChar[i] == Convert.ToChar((i + 1) + 48))
+                        {
+                            possibleMoves.Add(iaBrainDicX[boardLocal][i]);
+                        }
+                        else
+                        {
+                            possibleMoves.Add(float.MinValue);
+                        }
+                    }
+
+                    return returnBiggest(possibleMoves).ToString();
+                }
+                else
+                {
+                    float[] f = new float[9] { 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f };
+
+                    //char[,] boardTemp = new char[3, 3];
+
+                    iaBrainDicX.Add(boardLocal, f);
+
+                    return "5";
+                }
+            }
+            else
+            {
+                if (iaBrainDicO.ContainsKey(boardLocal))
+                {
+                    for (int i = 0; i < iaBrainDicO[boardLocal].Length; i++)
+                    {
+                        char[] boardChar = boardLocal.ToCharArray();
+                        //the +48 is to converto to asc table
+                        if (boardChar[i] == Convert.ToChar((i + 1) + 48))
+                        {
+                            possibleMoves.Add(iaBrainDicO[boardLocal][i]);
+                        }
+                        else
+                        {
+                            possibleMoves.Add(float.MinValue);
+                        }
+                    }
+
+                    return returnBiggest(possibleMoves).ToString();
+                }
+                else
+                {
+                    float[] f = new float[9] { 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f };
+
+                    //char[,] boardTemp = new char[3, 3];
+
+                    iaBrainDicO.Add(boardLocal, f);
+
+                    return "5";
+                }
             }
         }
 
@@ -532,7 +557,23 @@ namespace TicTacToe
             }
 
             //convert 1...9 (board) to 0...8(array)
-            return smallest+1;
+            return smallest + 1;
+        }
+
+        static void addPlay(string boardLocal, string move, char turn)
+        {
+            Plays p = new Plays(boardLocal, move);
+            if (turn == 'X')
+            {
+                playsX.Add(p);
+                addCountSameMovesX(boardLocal);
+            }
+            else
+            {
+                playsO.Add(p);
+                addCountSameMovesO(boardLocal);
+            }
+
         }
 
         static bool WinCondition()
@@ -605,47 +646,179 @@ namespace TicTacToe
             return true;
         }
 
-        static void IAChange(string s, bool rewarding, string boardStatus = null)
+        static void IAFinalGame()
+        {
+            if (winnerPlayer == 'X')
+            {
+                foreach (Plays p in playsX)
+                {
+                    IAChange(p.Value, true, 'X', p.Key);
+                    IAChange(p.Value, true, 'X', p.Key);
+                    IAChange(p.Value, true, 'X', p.Key);
+                    IAChange(p.Value, true, 'X', p.Key);
+                    IAChange(p.Value, true, 'X', p.Key);
+                }
+
+                iaOLosses++;
+                foreach (Plays p in playsO)
+                {
+                    IAChange(p.Value, false, 'O', p.Key);
+                    IAChange(p.Value, false, 'O', p.Key);
+                    IAChange(p.Value, false, 'O', p.Key);
+                    IAChange(p.Value, false, 'O', p.Key);
+                    IAChange(p.Value, false, 'O', p.Key);
+                }
+            }
+            else if (winnerPlayer == 'O')
+            {
+                foreach (Plays p in playsX)
+                {
+                    IAChange(p.Value, false, 'X', p.Key);
+                    IAChange(p.Value, false, 'X', p.Key);
+                    IAChange(p.Value, false, 'X', p.Key);
+                    IAChange(p.Value, false, 'X', p.Key);
+                    IAChange(p.Value, false, 'X', p.Key);
+                }
+                iaXLosses++;
+
+                foreach (Plays p in playsO)
+                {
+                    IAChange(p.Value, true, 'O', p.Key);
+                    IAChange(p.Value, true, 'O', p.Key);
+                    IAChange(p.Value, true, 'O', p.Key);
+                    IAChange(p.Value, true, 'O', p.Key);
+                    IAChange(p.Value, true, 'O', p.Key);
+                }
+            }
+            else
+            {
+                //empate
+                foreach (Plays p in playsX)
+                {
+                    IAChange(p.Value, false, 'X', p.Key);
+                }
+
+                foreach (Plays p in playsO)
+                {
+                    IAChange(p.Value, true, 'O', p.Key);
+                }
+            }
+            WriteTxtX();
+            WriteTxtO();
+        }
+
+        static void IAChange(string s, bool rewarding, char turn, string boardStatus = null)
         {
             if (boardStatus == null)
             {
                 boardStatus = TransformBoardToString();
             }
+            int valueToBeChanged = Int32.Parse(s) - 1;
 
-            if (rewarding)
+            if (turn == 'X')
             {
-                float reward = 0.1f / 100 * punishment;
-                iaBrainDic[boardStatus][Int32.Parse(s)-1] += reward;
-            }
-            else
-            {
-                float subtract = 0.1f / 100.0f * punishment;
-                iaBrainDic[boardStatus][Int32.Parse(s)-1] -= subtract;
-            }
-        }
-
-        static void IAFinalGame()
-        {
-            if (winnerPlayer == 'X')
-            {
-                iaLosses++;
-                //ia perdeu
-                //Console.WriteLine("Ia Lost!");
-                foreach (Plays p in plays)
+                if (rewarding)
                 {
-                    IAChange(p.Value, false, p.Key);
+                    float reward = 0.001f * punishment;
+
+                    for (int i = 0; i < iaBrainDicX[boardStatus].Length; i++)
+                    {
+                        if (i == valueToBeChanged)
+                        {
+                            iaBrainDicX[boardStatus][i] += reward;
+                            if (iaBrainDicX[boardStatus][i] > 100.0f)
+                            {
+                                iaBrainDicX[boardStatus][i] = 100.0f;
+                            }
+                        }
+                        else
+                        {
+                            iaBrainDicX[boardStatus][i] -= (reward / 8);
+                            if (iaBrainDicX[boardStatus][i] < 0.0f)
+                            {
+                                iaBrainDicX[boardStatus][i] = 0.0f;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    float subtract = 0.001f * punishment;
+
+
+                    for (int i = 0; i < iaBrainDicX[boardStatus].Length; i++)
+                    {
+                        if (i == valueToBeChanged)
+                        {
+                            iaBrainDicX[boardStatus][i] -= subtract;
+                            if (iaBrainDicX[boardStatus][i] < 0.0f)
+                            {
+                                iaBrainDicX[boardStatus][i] = 0.0f;
+                            }
+                        }
+                        else
+                        {
+                            iaBrainDicX[boardStatus][i] += (subtract / 8);
+                            if (iaBrainDicX[boardStatus][i] > 100.0f)
+                            {
+                                iaBrainDicX[boardStatus][i] = 100.0f;
+                            }
+                        }
+                    }
                 }
             }
             else
             {
-                //ia ganhou
-                //Console.WriteLine("Ia Won!");
-                foreach (Plays p in plays)
+                if (rewarding)
                 {
-                    IAChange(p.Value, true, p.Key);
+                    float reward = 0.001f * punishment;
+
+                    for (int i = 0; i < iaBrainDicO[boardStatus].Length; i++)
+                    {
+                        if (i == valueToBeChanged)
+                        {
+                            iaBrainDicO[boardStatus][i] += reward;
+                            if (iaBrainDicO[boardStatus][i] > 100.0f)
+                            {
+                                iaBrainDicO[boardStatus][i] = 100.0f;
+                            }
+                        }
+                        else
+                        {
+                            iaBrainDicO[boardStatus][i] -= (reward / 8);
+                            if (iaBrainDicO[boardStatus][i] < 0.0f)
+                            {
+                                iaBrainDicO[boardStatus][i] = 0.0f;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    float subtract = 0.001f * punishment;
+
+
+                    for (int i = 0; i < iaBrainDicO[boardStatus].Length; i++)
+                    {
+                        if (i == valueToBeChanged)
+                        {
+                            iaBrainDicO[boardStatus][i] -= subtract;
+                            if (iaBrainDicO[boardStatus][i] < 0.0f)
+                            {
+                                iaBrainDicO[boardStatus][i] = 0.0f;
+                            }
+                        }
+                        else
+                        {
+                            iaBrainDicO[boardStatus][i] += (subtract / 8);
+                            if (iaBrainDicO[boardStatus][i] > 100.0f)
+                            {
+                                iaBrainDicO[boardStatus][i] = 100.0f;
+                            }
+                        }
+                    }
                 }
             }
-            WriteTxt();
         }
 
         static string TransformBoardToString(char[,] boardStatus = null)
@@ -680,47 +853,127 @@ namespace TicTacToe
             return newBoard;
         }
 
-        static void addCountSameMoves(string boardLocal)
+        static void addCountSameMovesX(string boardLocal)
         {
-            if(numberOfSameMoves.ContainsKey(boardLocal))
+            if (numberOfSameMovesX.ContainsKey(boardLocal))
             {
-                numberOfSameMoves[boardLocal]++;
+                numberOfSameMovesX[boardLocal]++;
             }
             else
             {
-                numberOfSameMoves.Add(boardLocal, 1);
+                numberOfSameMovesX.Add(boardLocal, 1);
             }
         }
 
-        static void ReadTxt()
+        static void addCountSameMovesO(string boardLocal)
         {
-            using (StreamReader sr = new StreamReader(filePath))
+            if (numberOfSameMovesO.ContainsKey(boardLocal))
             {
-                TotalgamesPlayed=int.Parse(sr.ReadLine());
-                while (sr.Peek() >= 0)
+                numberOfSameMovesO[boardLocal]++;
+            }
+            else
+            {
+                numberOfSameMovesO.Add(boardLocal, 1);
+            }
+        }
+
+        static void ReadTxtX()
+        {
+            using (StreamReader sr = new StreamReader(filePathX))
+            {
+                //if ia is not empty
+                if (sr.Peek() >= 0)
                 {
-                    string preSplit = sr.ReadLine();
-                    string[] strSplit = preSplit.Split('/');
-                    float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
-                    iaBrainDic.Add(strSplit[0], f);
-                    if(strSplit.Length==11)
+                    TotalgamesPlayedX = int.Parse(sr.ReadLine());
+                    while (sr.Peek() >= 0)
                     {
-                        numberOfSameMoves.Add(strSplit[0], Int32.Parse(strSplit[10]));
+                        string preSplit = sr.ReadLine();
+                        string[] strSplit = preSplit.Split('/');
+                        float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
+                        iaBrainDicX.Add(strSplit[0], f);
+                        if (strSplit.Length == 11)
+                        {
+                            numberOfSameMovesX.Add(strSplit[0], Int32.Parse(strSplit[10]));
+                        }
+                        else
+                        {
+                            numberOfSameMovesX.Add(strSplit[0], 0);
+                        }
                     }
-                    else
-                    {
-                        numberOfSameMoves.Add(strSplit[0], 0);
-                    }
+                }
+                else
+                {
+                    TotalgamesPlayedX = 0;
                 }
             }
         }
 
-        static void WriteTxt()
+        static void ReadTxtO()
         {
-            using (StreamWriter sw = new StreamWriter(filePath))
+            using (StreamReader sr = new StreamReader(filePathO))
             {
-                sw.WriteLine(TotalgamesPlayed+1);
-                foreach (KeyValuePair<string, float[]> kvp in iaBrainDic)
+                //if ia is not empty
+                if (sr.Peek() >= 0)
+                {
+                    TotalgamesPlayedO = int.Parse(sr.ReadLine());
+                    while (sr.Peek() >= 0)
+                    {
+                        string preSplit = sr.ReadLine();
+                        string[] strSplit = preSplit.Split('/');
+                        float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
+                        iaBrainDicO.Add(strSplit[0], f);
+                        if (strSplit.Length == 11)
+                        {
+                            numberOfSameMovesO.Add(strSplit[0], Int32.Parse(strSplit[10]));
+                        }
+                        else
+                        {
+                            numberOfSameMovesO.Add(strSplit[0], 0);
+                        }
+                    }
+                }
+                else
+                {
+                    TotalgamesPlayedO = 0;
+                }
+            }
+        }
+
+        static void WriteTxtX()
+        {
+            using (StreamWriter sw = new StreamWriter(filePathX))
+            {
+                sw.WriteLine(TotalgamesPlayedX + 1);
+                foreach (KeyValuePair<string, float[]> kvp in iaBrainDicX)
+                {
+                    string line = kvp.Key + "/";
+
+                    foreach (float chanceToMakeThisMove in kvp.Value)
+                    {
+                        line += chanceToMakeThisMove + "/";
+                    }
+
+                    int sameMovesCount;
+                    if (numberOfSameMovesX.TryGetValue(kvp.Key, out sameMovesCount))
+                    {
+                        line += sameMovesCount.ToString();
+                    }
+                    else
+                    {
+                        line += "0";
+                    }
+
+                    sw.WriteLine(line);
+                }
+            }
+        }
+
+        static void WriteTxtO()
+        {
+            using (StreamWriter sw = new StreamWriter(filePathO))
+            {
+                sw.WriteLine(TotalgamesPlayedO + 1);
+                foreach (KeyValuePair<string, float[]> kvp in iaBrainDicO)
                 {
                     string line = kvp.Key + "/";
 
@@ -731,7 +984,7 @@ namespace TicTacToe
                     //line = line.Remove(line.Length - 1);
 
                     int sameMovesCount;
-                    if (numberOfSameMoves.TryGetValue(kvp.Key, out sameMovesCount))
+                    if (numberOfSameMovesO.TryGetValue(kvp.Key, out sameMovesCount))
                     {
                         line += sameMovesCount.ToString();
                     }
