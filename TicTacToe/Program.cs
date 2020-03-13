@@ -21,6 +21,7 @@ namespace TicTacToe
         static List<Plays> playsX;
         static List<Plays> playsO;
         static char winnerPlayer;
+
         static int iaXLosses = 0;
         static int iaOLosses = 0;
 
@@ -28,26 +29,37 @@ namespace TicTacToe
         static int TotalgamesPlayedX;
         static int TotalgamesPlayedO;
 
-        static int punishment = 5;
+        static int punishment = 2;
+        static string opponent = "Rand";
 
         static void Main(string[] args)
         {
             filePathX = filePathO = System.IO.Directory.GetCurrentDirectory().Split("bin\\Debug\\netcoreapp3.0")[0];
             filePathX += @"Txt\IaBrainX.txt";
             filePathO += @"Txt\IaBrainO.txt";
-            while (gamesPlayed < 10000)
+
+            while (gamesPlayed < 50000)
             {
                 InitializeBoard();
                 InitializaVariables();
 
                 while (!gameWon)
                 {
-                    Draw();
+                    DrawBoard();
                     if (playerTurn)
                     {
-                        //PlayerMove();
-                        //RandMove('X');
-                        IAMove('X');
+                        switch (opponent)
+                        {
+                            case "Player":
+                                PlayerMove();
+                                break;
+                            case "Rand":
+                                RandMove('X');
+                                break;
+                            case "IA":
+                                IAMove('X');
+                                break;
+                        }
                     }
                     else
                     {
@@ -58,10 +70,11 @@ namespace TicTacToe
                 IAFinalGame();
                 gamesPlayed++;
             }
+            DrawBoard(true);
             Console.Beep();
             Console.WriteLine("Games Ia 'X' Lost:" + iaXLosses);
             Console.WriteLine("Games Ia 'O' Lost:" + iaOLosses);
-            
+
             Console.WriteLine("Total Games:" + gamesPlayed);
         }
 
@@ -93,9 +106,9 @@ namespace TicTacToe
             ReadTxtO();
         }
 
-        static void Draw()
+        static void DrawBoard(bool showBoard = false)
         {
-            bool showBoard = false;
+            //showBoard = true;
             if (showBoard)
             {
                 Console.Clear();
@@ -497,11 +510,9 @@ namespace TicTacToe
                 }
                 else
                 {
-                    float[] f = new float[9] { 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f };
+                    float[] percentages = new float[9] { 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f };
 
-                    //char[,] boardTemp = new char[3, 3];
-
-                    iaBrainDicX.Add(boardLocal, f);
+                    iaBrainDicX.Add(boardLocal, percentages);
 
                     return "5";
                 }
@@ -528,11 +539,9 @@ namespace TicTacToe
                 }
                 else
                 {
-                    float[] f = new float[9] { 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f, 0.11f };
+                    float[] percentages = new float[9] { 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f, 0.111f };
 
-                    //char[,] boardTemp = new char[3, 3];
-
-                    iaBrainDicO.Add(boardLocal, f);
+                    iaBrainDicO.Add(boardLocal, percentages);
 
                     return "5";
                 }
@@ -581,51 +590,51 @@ namespace TicTacToe
             if (board[0, 0] == board[0, 1] && board[0, 1] == board[0, 2])
             {
                 winnerPlayer = board[0, 0];
-                Draw();
+                DrawBoard();
                 return true;
             }
             if (board[1, 0] == board[1, 1] && board[1, 1] == board[1, 2])
             {
                 winnerPlayer = board[1, 0];
-                Draw();
+                DrawBoard();
                 return true;
             }
             if (board[2, 0] == board[0, 1] && board[2, 1] == board[2, 2])
             {
                 winnerPlayer = board[2, 0];
-                Draw();
+                DrawBoard();
                 return true;
             }
             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             if (board[0, 0] == board[1, 0] && board[1, 0] == board[2, 0])
             {
                 winnerPlayer = board[0, 0];
-                Draw();
+                DrawBoard();
                 return true;
             }
             if (board[0, 1] == board[1, 1] && board[1, 1] == board[2, 1])
             {
                 winnerPlayer = board[0, 1];
-                Draw();
+                DrawBoard();
                 return true;
             }
             if (board[0, 2] == board[1, 2] && board[1, 2] == board[2, 2])
             {
                 winnerPlayer = board[0, 2];
-                Draw();
+                DrawBoard();
                 return true;
             }
             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             if (board[0, 0] == board[1, 1] && board[1, 1] == board[2, 2])
             {
                 winnerPlayer = board[0, 0];
-                Draw();
+                DrawBoard();
                 return true;
             }
             if (board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0])
             {
                 winnerPlayer = board[0, 2];
-                Draw();
+                DrawBoard();
                 return true;
             }
             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -642,7 +651,7 @@ namespace TicTacToe
                 }
             }
             winnerPlayer = 'N';
-            Draw();
+            DrawBoard();
             return true;
         }
 
@@ -652,8 +661,6 @@ namespace TicTacToe
             {
                 foreach (Plays p in playsX)
                 {
-                    IAChange(p.Value, true, 'X', p.Key);
-                    IAChange(p.Value, true, 'X', p.Key);
                     IAChange(p.Value, true, 'X', p.Key);
                     IAChange(p.Value, true, 'X', p.Key);
                     IAChange(p.Value, true, 'X', p.Key);
@@ -671,6 +678,7 @@ namespace TicTacToe
             }
             else if (winnerPlayer == 'O')
             {
+                iaXLosses++;
                 foreach (Plays p in playsX)
                 {
                     IAChange(p.Value, false, 'X', p.Key);
@@ -679,12 +687,9 @@ namespace TicTacToe
                     IAChange(p.Value, false, 'X', p.Key);
                     IAChange(p.Value, false, 'X', p.Key);
                 }
-                iaXLosses++;
 
                 foreach (Plays p in playsO)
                 {
-                    IAChange(p.Value, true, 'O', p.Key);
-                    IAChange(p.Value, true, 'O', p.Key);
                     IAChange(p.Value, true, 'O', p.Key);
                     IAChange(p.Value, true, 'O', p.Key);
                     IAChange(p.Value, true, 'O', p.Key);
@@ -695,7 +700,7 @@ namespace TicTacToe
                 //empate
                 foreach (Plays p in playsX)
                 {
-                    IAChange(p.Value, false, 'X', p.Key);
+                    IAChange(p.Value, true, 'X', p.Key);
                 }
 
                 foreach (Plays p in playsO)
@@ -703,7 +708,12 @@ namespace TicTacToe
                     IAChange(p.Value, true, 'O', p.Key);
                 }
             }
-            WriteTxtX();
+
+            if (opponent == "IA")
+            {
+                WriteTxtX();
+            }
+
             WriteTxtO();
         }
 
@@ -715,108 +725,56 @@ namespace TicTacToe
             }
             int valueToBeChanged = Int32.Parse(s) - 1;
 
+            Dictionary<string, float[]> iaBrainDic;
             if (turn == 'X')
             {
-                if (rewarding)
-                {
-                    float reward = 0.001f * punishment;
-
-                    for (int i = 0; i < iaBrainDicX[boardStatus].Length; i++)
-                    {
-                        if (i == valueToBeChanged)
-                        {
-                            iaBrainDicX[boardStatus][i] += reward;
-                            if (iaBrainDicX[boardStatus][i] > 100.0f)
-                            {
-                                iaBrainDicX[boardStatus][i] = 100.0f;
-                            }
-                        }
-                        else
-                        {
-                            iaBrainDicX[boardStatus][i] -= (reward / 8);
-                            if (iaBrainDicX[boardStatus][i] < 0.0f)
-                            {
-                                iaBrainDicX[boardStatus][i] = 0.0f;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    float subtract = 0.001f * punishment;
-
-
-                    for (int i = 0; i < iaBrainDicX[boardStatus].Length; i++)
-                    {
-                        if (i == valueToBeChanged)
-                        {
-                            iaBrainDicX[boardStatus][i] -= subtract;
-                            if (iaBrainDicX[boardStatus][i] < 0.0f)
-                            {
-                                iaBrainDicX[boardStatus][i] = 0.0f;
-                            }
-                        }
-                        else
-                        {
-                            iaBrainDicX[boardStatus][i] += (subtract / 8);
-                            if (iaBrainDicX[boardStatus][i] > 100.0f)
-                            {
-                                iaBrainDicX[boardStatus][i] = 100.0f;
-                            }
-                        }
-                    }
-                }
+                iaBrainDic = iaBrainDicX;
             }
             else
             {
-                if (rewarding)
-                {
-                    float reward = 0.001f * punishment;
+                iaBrainDic = iaBrainDicO;
+            }
+            //
+            float valueToChange;
+            if (rewarding)
+            {
+                valueToChange = (100 + punishment) / 100.0f;
+            }
+            else
+            {
+                valueToChange = (100 - punishment) / 100.0f;
+            }
+            //
+            iaBrainDic[boardStatus][valueToBeChanged] = iaBrainDic[boardStatus][valueToBeChanged] * valueToChange;
 
-                    for (int i = 0; i < iaBrainDicO[boardStatus].Length; i++)
-                    {
-                        if (i == valueToBeChanged)
-                        {
-                            iaBrainDicO[boardStatus][i] += reward;
-                            if (iaBrainDicO[boardStatus][i] > 100.0f)
-                            {
-                                iaBrainDicO[boardStatus][i] = 100.0f;
-                            }
-                        }
-                        else
-                        {
-                            iaBrainDicO[boardStatus][i] -= (reward / 8);
-                            if (iaBrainDicO[boardStatus][i] < 0.0f)
-                            {
-                                iaBrainDicO[boardStatus][i] = 0.0f;
-                            }
-                        }
-                    }
+            PercentageFix(iaBrainDic, boardStatus);
+        }
+
+        static void PercentageFix(Dictionary<string, float[]> iaBrainDic, string boardStatus)
+        {
+            float total = 0;
+
+            for (int i = 0; i < iaBrainDic[boardStatus].Length; i++)
+            {
+                total += iaBrainDic[boardStatus][i];
+            }
+
+            for (int i = 0; i < iaBrainDic[boardStatus].Length; i++)
+            {
+                float percentageOfValue = iaBrainDic[boardStatus][i] * 100 / total;
+                float newValue = percentageOfValue / 100;
+                newValue = Convert.ToSingle(Convert.ToInt32(newValue * 1000)) / 1000.0f;
+                if (newValue >= 1.0f)
+                {
+                    iaBrainDic[boardStatus][i] = 0.992f;
+                }
+                else if (newValue <= 0)
+                {
+                    iaBrainDic[boardStatus][i] = 0.001f;
                 }
                 else
                 {
-                    float subtract = 0.001f * punishment;
-
-
-                    for (int i = 0; i < iaBrainDicO[boardStatus].Length; i++)
-                    {
-                        if (i == valueToBeChanged)
-                        {
-                            iaBrainDicO[boardStatus][i] -= subtract;
-                            if (iaBrainDicO[boardStatus][i] < 0.0f)
-                            {
-                                iaBrainDicO[boardStatus][i] = 0.0f;
-                            }
-                        }
-                        else
-                        {
-                            iaBrainDicO[boardStatus][i] += (subtract / 8);
-                            if (iaBrainDicO[boardStatus][i] > 100.0f)
-                            {
-                                iaBrainDicO[boardStatus][i] = 100.0f;
-                            }
-                        }
-                    }
+                    iaBrainDic[boardStatus][i] = newValue;
                 }
             }
         }
@@ -889,8 +847,8 @@ namespace TicTacToe
                     {
                         string preSplit = sr.ReadLine();
                         string[] strSplit = preSplit.Split('/');
-                        float[] f = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
-                        iaBrainDicX.Add(strSplit[0], f);
+                        float[] percentages = new float[9] { float.Parse(strSplit[1]), float.Parse(strSplit[2]), float.Parse(strSplit[3]), float.Parse(strSplit[4]), float.Parse(strSplit[5]), float.Parse(strSplit[6]), float.Parse(strSplit[7]), float.Parse(strSplit[8]), float.Parse(strSplit[9]) };
+                        iaBrainDicX.Add(strSplit[0], percentages);
                         if (strSplit.Length == 11)
                         {
                             numberOfSameMovesX.Add(strSplit[0], Int32.Parse(strSplit[10]));
@@ -948,9 +906,9 @@ namespace TicTacToe
                 {
                     string line = kvp.Key + "/";
 
-                    foreach (float chanceToMakeThisMove in kvp.Value)
+                    foreach (float percentages in kvp.Value)
                     {
-                        line += chanceToMakeThisMove + "/";
+                        line += percentages + "/";
                     }
 
                     int sameMovesCount;
