@@ -42,3 +42,16 @@ C:\Users\alu201620608\source\repos\angelodc\TicTacToeAI\TicTacToe\obj\Debug\netc
 C:\Users\alu201620608\source\repos\angelodc\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.dll
 C:\Users\alu201620608\source\repos\angelodc\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.pdb
 C:\Users\alu201620608\source\repos\angelodc\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csprojAssemblyReference.cache
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.exe
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.deps.json
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.runtimeconfig.json
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.runtimeconfig.dev.json
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.dll
+D:\RepositorioGit\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.pdb
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csproj.CoreCompileInputs.cache
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.AssemblyInfoInputs.cache
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.AssemblyInfo.cs
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.dll
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.pdb
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.genruntimeconfig.cache
+D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csprojAssemblyReference.cache
