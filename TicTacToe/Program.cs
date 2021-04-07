@@ -27,7 +27,7 @@ namespace TicTacToe
         static int ties = 0;
 
         static int gamesPlayed = 0;
-        static int maxGames = 1000 * 1000 * 1000;//10*1000*1000
+        static int maxGames = 49999000;//100 * 1000 * 1000;
         static int TotalgamesPlayedX;
         static int TotalgamesPlayedO;
 
@@ -57,12 +57,12 @@ namespace TicTacToe
             Console.Beep();
 
             Console.WriteLine("Player 'X':" + gameModeX);
-            Console.WriteLine("Games Ia 'X' Lost:" + iaXLosses);
+            Console.WriteLine("Games Ia 'X' Lost:" + iaXLosses + " - " + (int)((iaXLosses / (float)gamesPlayed) * 100.0f) + " %\n");
 
             Console.WriteLine("Player 'O':" + gameModeO);
-            Console.WriteLine("Games Ia 'O' Lost:" + iaOLosses);
+            Console.WriteLine("Games Ia 'O' Lost:" + iaOLosses + " - " + (int)((iaOLosses / (float)gamesPlayed) * 100.0f) + " %\n");
 
-            Console.WriteLine("Ties:" + ties);
+            Console.WriteLine("Ties:" + ties + " - " + (int)((ties / (float)gamesPlayed) * 100.0f) + "%\n");
 
             Console.WriteLine("Total Games:" + gamesPlayed);
         }
@@ -697,11 +697,11 @@ namespace TicTacToe
             {
                 iaOLosses++;
 
-                if (gameModeO == "IA" || gameModeO == "PLAYER")
+                if (gameModeO == "IA" || gameModeO == "PLAYER" || true)
                 {
                     foreach (Plays p in playsX)
                     {
-                        IAChange(p.Value, true, 'X', p.Key);
+                        //IAChange(p.Value, true, 'X', p.Key);
                     }
                 }
 
@@ -719,11 +719,11 @@ namespace TicTacToe
                     IAChange(p.Value, false, 'X', p.Key);
                 }
 
-                if (gameModeX == "IA" || gameModeX == "PLAYER")
+                if (gameModeX == "IA" || gameModeX == "PLAYER" || true)
                 {
                     foreach (Plays p in playsO)
                     {
-                        IAChange(p.Value, true, 'O', p.Key);
+                        //IAChange(p.Value, true, 'O', p.Key);
                     }
                 }
             }
@@ -731,34 +731,20 @@ namespace TicTacToe
             {
                 ties++;
 
-                if (gameModeO == "PLAYER")
+                if (gameModeO == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
                 {
                     foreach (Plays p in playsX)
                     {
                         IAChange(p.Value, true, 'X', p.Key);
                     }
                 }
-                else if (gameModeO == "RAMDOM")
-                {
-                    //foreach (Plays p in playsX)
-                    //{
-                    //    IAChange(p.Value, false, 'X', p.Key);
-                    //}
-                }
 
-                if (gameModeX == "PLAYER")
+                if (gameModeX == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
                 {
                     foreach (Plays p in playsO)
                     {
                         IAChange(p.Value, true, 'O', p.Key);
                     }
-                }
-                else if (gameModeO == "RAMDOM")
-                {
-                    //foreach (Plays p in playsO)
-                    //{
-                    //    IAChange(p.Value, false, 'O', p.Key);
-                    //}
                 }
             }
         }
@@ -807,7 +793,7 @@ namespace TicTacToe
 
             iaBrainDic[boardLocal][valueToBeChanged] = iaBrainDic[boardLocal][valueToBeChanged] * valueToChange;
 
-            PercentageFix2(iaBrainDic, boardLocal);
+            PercentageFix3(iaBrainDic, boardLocal);
         }
 
         static void PercentageFix(Dictionary<string, float[]> iaBrainDic, string boardStatus)
@@ -866,6 +852,21 @@ namespace TicTacToe
                 else
                 {
                     iaBrainDic[boardStatus][i] = newValue;
+                }
+            }
+        }
+
+        static void PercentageFix3(Dictionary<string, float[]> iaBrainDic, string boardStatus)
+        {
+            for (int i = 0; i < iaBrainDic[boardStatus].Length; i++)
+            {
+                if (iaBrainDic[boardStatus][i] < 0.01f)
+                {
+                    iaBrainDic[boardStatus][i] = 0.01f;
+                }
+                else if (iaBrainDic[boardStatus][i] > 0.92f)
+                {
+                    iaBrainDic[boardStatus][i] = 0.92f;
                 }
             }
         }
