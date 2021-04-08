@@ -17,7 +17,7 @@ namespace TicTacToe
         static List<Plays> playsO;
         static int punishmentOrRewardPercent = 15;
 
-        static void IAMove(char c, char[,] board)
+        static public void IAMove(char c, char[,] board)
         {
             if (filePathX == null)
             {
@@ -164,6 +164,13 @@ namespace TicTacToe
 
             ReadTxtX();
             ReadTxtO();
+        }
+
+        static void StartNewGame()
+        {
+
+            playsO = new List<Plays>();
+            playsX = new List<Plays>();
         }
 
         static void PercentageFix2(Dictionary<string, float[]> iaBrainDic, string boardStatus)
@@ -363,6 +370,7 @@ namespace TicTacToe
                     }
                 }
             }
+            StartNewGame();
         }
 
         #region Utiletary
