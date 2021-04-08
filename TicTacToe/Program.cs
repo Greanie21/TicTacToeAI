@@ -27,17 +27,17 @@ namespace TicTacToe
         static int ties = 0;
 
         static int gamesPlayed = 0;
-        static int maxGames = 49999000;//100 * 1000 * 1000;
+        static int maxGames = 100 * 1000 * 1000;
         static int TotalgamesPlayedX;
         static int TotalgamesPlayedO;
 
-        static int punishmentOrRewardPercent = 2;
+        static int punishmentOrRewardPercent = 15;
         static string gameModeX = "RANDOM";//PLAYER, RANDOM, IA
-        static string gameModeO = "IA";//PLAYER, RANDOM, IA
+        static string gameModeO = "RANDOM";//PLAYER, RANDOM, IA
 
         static void Main(string[] args)
         {
-            filePathX = filePathO = System.IO.Directory.GetCurrentDirectory().Split("bin\\Debug\\netcoreapp3.0")[0];
+            filePathX = filePathO = Directory.GetCurrentDirectory().Split("bin\\Debug\\netcoreapp3.0")[0];
             filePathX += @"Txt\IaBrainX.txt";
             filePathO += @"Txt\IaBrainO.txt";
 
@@ -49,7 +49,7 @@ namespace TicTacToe
 
                 PlayGame();
 
-                IAFinalEachGame();
+                FinalEachGame();
                 gamesPlayed++;
             }
             FinalLastGame();
@@ -134,27 +134,46 @@ namespace TicTacToe
             while (!gameWon)
             {
                 DrawBoard();
+                char activePlayer;
                 if (playerTurn)
                 {
+                    activePlayer = 'X';
                     switch (gameModeX)
                     {
                         case "PLAYER":
-                            PlayerMove('X');
+                            KeyValuePair<int,int> kvp=HumanMove.PlayerMove(activePlayer, board);
+                            if(kvp.Key==-1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
                             break;
                         case "RANDOM":
-                            RandMove('X');
+                            RandMove(activePlayer);
                             break;
                         case "IA":
-                            IAMove('X');
+                            IAMove(activePlayer);
                             break;
                     }
                 }
                 else
                 {
+                    activePlayer = 'O';
                     switch (gameModeO)
                     {
                         case "PLAYER":
-                            PlayerMove('O');
+                            KeyValuePair<int, int> kvp = HumanMove.PlayerMove(activePlayer, board);
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
                             break;
                         case "RANDOM":
                             RandMove('O');
@@ -187,107 +206,6 @@ namespace TicTacToe
         }
 
         #region Moves
-        static void PlayerMove(char c)
-        {
-            string move = Console.ReadLine();
-            switch (move)
-            {
-                case "1":
-                    if (board[0, 0] == '1')
-                    {
-                        board[0, 0] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "2":
-                    if (board[0, 1] == '2')
-                    {
-                        board[0, 1] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "3":
-                    if (board[0, 2] == '3')
-                    {
-                        board[0, 2] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "4":
-                    if (board[1, 0] == '4')
-                    {
-                        board[1, 0] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "5":
-                    if (board[1, 1] == '5')
-                    {
-                        board[1, 1] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "6":
-                    if (board[1, 2] == '6')
-                    {
-                        board[1, 2] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "7":
-                    if (board[2, 0] == '7')
-                    {
-                        board[2, 0] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "8":
-                    if (board[2, 1] == '8')
-                    {
-                        board[2, 1] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                case "9":
-                    if (board[2, 2] == '9')
-                    {
-                        board[2, 2] = c;
-                    }
-                    else
-                    {
-                        errorPlayer = true;
-                    }
-                    break;
-                default:
-                    errorPlayer = true;
-                    break;
-            }
-        }
-
         static void RandMove(char c)
         {
             string boardLocal = TransformBoardToString();
@@ -691,69 +609,70 @@ namespace TicTacToe
         }
 
         #region IA Things
-        static void IAFinalEachGame()
+        static void FinalEachGame()
         {
+            IaMove.IAFinalEachGame(winnerPlayer,gameModeO,gameModeX);
             if (winnerPlayer == 'X')
             {
                 iaOLosses++;
 
-                if (gameModeO == "IA" || gameModeO == "PLAYER" || true)
-                {
-                    foreach (Plays p in playsX)
-                    {
-                        //IAChange(p.Value, true, 'X', p.Key);
-                    }
-                }
+                //if (gameModeO == "IA" || gameModeO == "PLAYER" || true)
+                //{
+                //    foreach (Plays p in playsX)
+                //    {
+                //        //IAChange(p.Value, true, 'X', p.Key);
+                //    }
+                //}
 
-                foreach (Plays p in playsO)
-                {
-                    IAChange(p.Value, false, 'O', p.Key);
-                }
+                //foreach (Plays p in playsO)
+                //{
+                //    IAChange(p.Value, false, 'O', p.Key);
+                //}
             }
             else if (winnerPlayer == 'O')
             {
                 iaXLosses++;
 
-                foreach (Plays p in playsX)
-                {
-                    IAChange(p.Value, false, 'X', p.Key);
-                }
+                //foreach (Plays p in playsX)
+                //{
+                //    IAChange(p.Value, false, 'X', p.Key);
+                //}
 
-                if (gameModeX == "IA" || gameModeX == "PLAYER" || true)
-                {
-                    foreach (Plays p in playsO)
-                    {
-                        //IAChange(p.Value, true, 'O', p.Key);
-                    }
-                }
+                //if (gameModeX == "IA" || gameModeX == "PLAYER" || true)
+                //{
+                //    foreach (Plays p in playsO)
+                //    {
+                //        //IAChange(p.Value, true, 'O', p.Key);
+                //    }
+                //}
             }
             else
             {
                 ties++;
 
-                if (gameModeO == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
-                {
-                    foreach (Plays p in playsX)
-                    {
-                        IAChange(p.Value, true, 'X', p.Key);
-                    }
-                }
+                //if (gameModeO == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
+                //{
+                //    foreach (Plays p in playsX)
+                //    {
+                //        IAChange(p.Value, true, 'X', p.Key);
+                //    }
+                //}
 
-                if (gameModeX == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
-                {
-                    foreach (Plays p in playsO)
-                    {
-                        IAChange(p.Value, true, 'O', p.Key);
-                    }
-                }
+                //if (gameModeX == "PLAYER" /*|| gameModeO == "RAMDOM"*/)
+                //{
+                //    foreach (Plays p in playsO)
+                //    {
+                //        IAChange(p.Value, true, 'O', p.Key);
+                //    }
+                //}
             }
         }
 
         static void FinalLastGame()
         {
-            WriteTxtX();
+            IaMove.WriteTxtX(TotalgamesPlayedX, gamesPlayed);
 
-            WriteTxtO();
+            IaMove.WriteTxtO(TotalgamesPlayedO, gamesPlayed);
         }
 
         static void IAChange(string s, bool rewarding, char turn, string boardLocal = null)
@@ -793,7 +712,7 @@ namespace TicTacToe
 
             iaBrainDic[boardLocal][valueToBeChanged] = iaBrainDic[boardLocal][valueToBeChanged] * valueToChange;
 
-            PercentageFix3(iaBrainDic, boardLocal);
+            PercentageFix2(iaBrainDic, boardLocal);
         }
 
         static void PercentageFix(Dictionary<string, float[]> iaBrainDic, string boardStatus)
