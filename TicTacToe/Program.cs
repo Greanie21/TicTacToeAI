@@ -20,8 +20,6 @@ namespace TicTacToe
 
         static int gamesPlayed = 0;
         static int maxGames = 100 * 1000 * 1000;
-        static int TotalgamesPlayedX;
-        static int TotalgamesPlayedO;
 
         static string gameModeX = "RANDOM";//PLAYER, RANDOM, IA
         static string gameModeO = "RANDOM";//PLAYER, RANDOM, IA
@@ -39,8 +37,8 @@ namespace TicTacToe
                 gamesPlayed++;
             }
 
-            IaMove.WriteTxtX(TotalgamesPlayedX, gamesPlayed);
-            IaMove.WriteTxtO(TotalgamesPlayedO, gamesPlayed);
+            IaMove.WriteTxtX(gamesPlayed);
+            IaMove.WriteTxtO(gamesPlayed);
 
             Console.Beep();
 
@@ -108,37 +106,14 @@ namespace TicTacToe
             {
                 DrawBoard();
                 char activePlayer;
+                KeyValuePair<int, int> kvp = new KeyValuePair<int, int>(-1, -1);
                 if (playerTurn)
                 {
                     activePlayer = 'X';
                     switch (gameModeX)
                     {
                         case "PLAYER":
-                            KeyValuePair<int,int> kvp=HumanMove.PlayerMove(activePlayer, board);
-                            if(kvp.Key==-1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                        case "RANDOM":
-                            //RandMove(activePlayer);
-                            break;
-                        case "IA":
-                            IaMove.IAMove(activePlayer, board);
-                            break;
-                    }
-                }
-                else
-                {
-                    activePlayer = 'O';
-                    switch (gameModeO)
-                    {
-                        case "PLAYER":
-                            KeyValuePair<int, int> kvp = HumanMove.PlayerMove(activePlayer, board);
+                            kvp = HumanMove.PlayerMove(activePlayer, board);
                             if (kvp.Key == -1)
                             {
                                 errorPlayer = true;
@@ -149,10 +124,65 @@ namespace TicTacToe
                             }
                             break;
                         case "RANDOM":
-                            //RandMove('O');
+                            kvp = RandomIAMove.RandMove(activePlayer, board);
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
                             break;
                         case "IA":
-                            IaMove.IAMove(activePlayer, board);
+                            kvp = IaMove.IAMove(activePlayer, board);
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    activePlayer = 'O';
+                    switch (gameModeO)
+                    {
+                        case "PLAYER":
+                            kvp = HumanMove.PlayerMove(activePlayer, board);
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
+                            break;
+                        case "RANDOM":
+                            kvp = RandomIAMove.RandMove(activePlayer, board);
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
+                            break;
+                        case "IA":
+                            if (kvp.Key == -1)
+                            {
+                                errorPlayer = true;
+                            }
+                            else
+                            {
+                                board[kvp.Key, kvp.Value] = activePlayer;
+                            }
                             break;
                     }
                 }
@@ -584,7 +614,7 @@ namespace TicTacToe
         #region IA Things
         static void FinalEachGame()
         {
-            IaMove.IAFinalEachGame(winnerPlayer,gameModeO,gameModeX);
+            IaMove.IAFinalEachGame(winnerPlayer, gameModeO, gameModeX);
             if (winnerPlayer == 'X')
             {
                 iaOLosses++;
