@@ -17,7 +17,10 @@ namespace TicTacToe
         static List<Plays> playsO;
         static int punishmentOrRewardPercent = 15;
 
-        static public void IAMove(char c, char[,] board)
+        static int TotalgamesPlayedX;
+        static int TotalgamesPlayedO;
+
+        static public KeyValuePair<int, int> IAMove(char c, char[,] board)
         {
             if (filePathX == null)
             {
@@ -33,12 +36,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[0, 0] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(0, 0);
                     }
                     break;
                 case "2":
@@ -46,25 +44,14 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[0, 1] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(0,1);
                     }
                     break;
                 case "3":
                     if (board[0, 2] == '3')
                     {
                         addPlayToIa(boardLocal, move, c);
-
-                        board[0, 2] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(0,2);
                     }
                     break;
                 case "4":
@@ -72,12 +59,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[1, 0] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(1,0);
                     }
                     break;
                 case "5":
@@ -85,12 +67,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[1, 1] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(1,1);
                     }
                     break;
                 case "6":
@@ -98,12 +75,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[1, 2] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(1,2);
                     }
                     break;
                 case "7":
@@ -111,12 +83,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[2, 0] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(2,0);
                     }
                     break;
                 case "8":
@@ -124,12 +91,7 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[2, 1] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(2,1);
                     }
                     break;
                 case "9":
@@ -137,21 +99,18 @@ namespace TicTacToe
                     {
                         addPlayToIa(boardLocal, move, c);
 
-                        board[2, 2] = c;
-                    }
-                    else
-                    {
-                        IAChange(move, false, c, boardLocal);
-                        IAMove(c, board);
+                        return new KeyValuePair<int, int>(2,2);
                     }
                     break;
                 default:
-                    Console.WriteLine("Logical error!");
-                    break;
+                    throw new Exception("Logical error!");
             }
+
+            IAChange(move, false, c, boardLocal);
+            return IAMove(c, board);
         }
 
-        static void InitializaVariablesForAllGames()
+        public static void InitializaVariablesForAllGames()
         {
             filePathX = filePathO = Directory.GetCurrentDirectory().Split("bin\\Debug\\netcoreapp3.0")[0];
             filePathX += @"Txt\IaBrainX.txt";
@@ -162,13 +121,14 @@ namespace TicTacToe
             numberOfSameMovesX = new Dictionary<string, int>();
             numberOfSameMovesO = new Dictionary<string, int>();
 
+            StartNewGame();
+
             ReadTxtX();
             ReadTxtO();
         }
 
         static void StartNewGame()
         {
-
             playsO = new List<Plays>();
             playsX = new List<Plays>();
         }
@@ -204,7 +164,7 @@ namespace TicTacToe
             }
         }
 
-        static void IAChange(string s, bool rewarding, char turn, string boardLocal)
+        public static void IAChange(string s, bool rewarding, char turn, string boardLocal)
         {
             int valueToBeChanged = Int32.Parse(s) - 1;
 
@@ -303,7 +263,7 @@ namespace TicTacToe
             return smallest + 1;
         }
 
-        static void addPlayToIa(string boardLocal, string move, char turn)
+        static public void addPlayToIa(string boardLocal, string move, char turn)
         {
             Plays p = new Plays(boardLocal, move);
             if (turn == 'X')
@@ -374,7 +334,7 @@ namespace TicTacToe
         }
 
         #region Utiletary
-        static string TransformBoardToString(char[,] boardStatus)
+        public static string TransformBoardToString(char[,] boardStatus)
         {
             string newBoard = string.Empty;
 
@@ -427,14 +387,14 @@ namespace TicTacToe
         #endregion
 
         #region Read and Write Txt
-        static int ReadTxtX()
+        static void ReadTxtX()
         {
             using (StreamReader sr = new StreamReader(filePathX))
             {
                 //if ia is not empty
                 if (sr.Peek() >= 0)
                 {
-                    int TotalgamesPlayedX = int.Parse(sr.ReadLine());
+                    TotalgamesPlayedX = int.Parse(sr.ReadLine());
                     while (sr.Peek() >= 0)
                     {
                         string preSplit = sr.ReadLine();
@@ -450,23 +410,18 @@ namespace TicTacToe
                             numberOfSameMovesX.Add(strSplit[0], 0);
                         }
                     }
-                    return TotalgamesPlayedX;
-                }
-                else
-                {
-                    return 0;
                 }
             }
         }
 
-        static int ReadTxtO()
+        static void ReadTxtO()
         {
             using (StreamReader sr = new StreamReader(filePathO))
             {
                 //if ia is not empty
                 if (sr.Peek() >= 0)
                 {
-                    int TotalgamesPlayedO = int.Parse(sr.ReadLine());
+                    TotalgamesPlayedO = int.Parse(sr.ReadLine());
                     while (sr.Peek() >= 0)
                     {
                         string preSplit = sr.ReadLine();
@@ -482,16 +437,11 @@ namespace TicTacToe
                             numberOfSameMovesO.Add(strSplit[0], 0);
                         }
                     }
-                    return TotalgamesPlayedO;
-                }
-                else
-                {
-                    return 0;
                 }
             }
         }
 
-        static public void WriteTxtX(int TotalgamesPlayedX, int gamesPlayed)
+        static public void WriteTxtX(int gamesPlayed)
         {
             using (StreamWriter sw = new StreamWriter(filePathX))
             {
@@ -525,7 +475,7 @@ namespace TicTacToe
             }
         }
 
-        static public void WriteTxtO(int TotalgamesPlayedO, int gamesPlayed)
+        static public void WriteTxtO(int gamesPlayed)
         {
             using (StreamWriter sw = new StreamWriter(filePathO))
             {
