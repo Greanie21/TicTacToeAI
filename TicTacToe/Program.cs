@@ -19,9 +19,9 @@ namespace TicTacToe
         static int ties = 0;
 
         static int gamesPlayed = 0;
-        static int maxGames = 100 * 1000 * 1000;
+        static int maxGames = 10*1000 * 1000;//100 * 1000 * 1000;//2 horas- 55min
 
-        static string gameModeX = "RANDOM";//PLAYER, RANDOM, IA
+        static string gameModeX = "IA";//PLAYER, RANDOM, IA
         static string gameModeO = "RANDOM";//PLAYER, RANDOM, IA
 
         static void Main(string[] args)

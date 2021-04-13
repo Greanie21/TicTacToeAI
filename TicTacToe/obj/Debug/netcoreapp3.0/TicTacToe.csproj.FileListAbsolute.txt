@@ -55,3 +55,16 @@ D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.dll
 D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.pdb
 D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.genruntimeconfig.cache
 D:\RepositorioGit\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csprojAssemblyReference.cache
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.exe
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.deps.json
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.runtimeconfig.json
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.runtimeconfig.dev.json
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.dll
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\bin\Debug\netcoreapp3.0\TicTacToe.pdb
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csprojAssemblyReference.cache
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.AssemblyInfoInputs.cache
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.AssemblyInfo.cs
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.csproj.CoreCompileInputs.cache
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.dll
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.pdb
+C:\Users\Pc\Source\Repos\Greanie21\TicTacToeAI\TicTacToe\obj\Debug\netcoreapp3.0\TicTacToe.genruntimeconfig.cache
