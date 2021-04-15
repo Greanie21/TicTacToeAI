@@ -19,10 +19,10 @@ namespace TicTacToe
         static int ties = 0;
 
         static int gamesPlayed = 0;
-        static int maxGames = 3;//100 * 1000 * 1000;//55min
+        static int maxGames = 5000;
 
         static string gameModeX = "IA";//PLAYER, RANDOM, IA
-        static string gameModeO = "RANDOM";//PLAYER, RANDOM, IA
+        static string gameModeO = "IA";//PLAYER, RANDOM, IA
 
         static void Main(string[] args)
         {
@@ -106,85 +106,40 @@ namespace TicTacToe
             {
                 DrawBoard();
                 char activePlayer;
+                string gameModeOfCurrentPlayer;
                 KeyValuePair<int, int> kvp = new KeyValuePair<int, int>(-1, -1);
+
                 if (playerTurn)
                 {
                     activePlayer = 'X';
-                    switch (gameModeX)
-                    {
-                        case "PLAYER":
-                            kvp = HumanMove.PlayerMove(activePlayer, board);
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                        case "RANDOM":
-                            kvp = RandomIAMove.RandMove(activePlayer, board);
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                        case "IA":
-                            kvp = IaMove.IAMove(activePlayer, board);
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                    }
+                    gameModeOfCurrentPlayer = gameModeX;
                 }
                 else
                 {
                     activePlayer = 'O';
-                    switch (gameModeO)
-                    {
-                        case "PLAYER":
-                            kvp = HumanMove.PlayerMove(activePlayer, board);
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                        case "RANDOM":
-                            kvp = RandomIAMove.RandMove(activePlayer, board);
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                        case "IA":
-                            if (kvp.Key == -1)
-                            {
-                                errorPlayer = true;
-                            }
-                            else
-                            {
-                                board[kvp.Key, kvp.Value] = activePlayer;
-                            }
-                            break;
-                    }
+                    gameModeOfCurrentPlayer = gameModeO;
+                }
+
+                switch (gameModeOfCurrentPlayer)
+                {
+                    case "PLAYER":
+                        kvp = HumanMove.PlayerMove(activePlayer, board);
+                        break;
+                    case "RANDOM":
+                        kvp = RandomIAMove.RandMove(activePlayer, board);
+                        break;
+                    case "IA":
+                        kvp = IaMove.IAMove(activePlayer, board);
+                        break;
+                }
+
+                if (kvp.Key == -1)
+                {
+                    errorPlayer = true;
+                }
+                else
+                {
+                    board[kvp.Key, kvp.Value] = activePlayer;
                 }
 
                 if (errorPlayer == false)
