@@ -248,19 +248,19 @@ namespace TicTacToe
             {
                 return 0;
             }
-            int smallest = 0;
+            int biggest = 0;
 
 
             for (int i = 1; i < values.Count; i++)
             {
-                if (values[i] > values[i - 1])
+                if (values[i] > values[biggest])
                 {
-                    smallest = i;
+                    biggest = i;
                 }
             }
 
-            //convert 1...9 (board) to 0...8(array)
-            return smallest + 1;
+            //convert 0...8(array) to 1...9 (board)
+            return biggest + 1;
         }
 
         static public void addPlayToIa(string boardLocal, string move, char turn)
